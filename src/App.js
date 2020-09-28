@@ -30,10 +30,16 @@ class App extends React.Component {
 
   render(){
     const { isLoading, movies } = this.state;
-    return <div>{isLoading ? 'Loading ...' : 
-    movies.map( (movie) => {
-      console.log(movie);
-      return <Movie   
+    return (
+    <section class="container">
+      {isLoading ? (
+        <div class ="loader">
+          <span class="loader_text">'Loading ...'</span>
+        </div>
+        ) : (
+        <div class ="movies">
+        {movies.map((movie) => (
+       <Movie   
         // Movie 컴포넌트에서 받아오는 프롭스 = { 실제 들어가야할 json의 속성명 } 
         key = {movie.id}
         id={movie.id} 
@@ -41,9 +47,12 @@ class App extends React.Component {
         title={movie.title}
         summary={movie.summary}
         poster={movie.medium_cover_image}
-      />;
-    }) }
-    </div>;
+      />
+        ))}      
+    </div>
+      )}
+    </section>
+    );
    }
 }
 
