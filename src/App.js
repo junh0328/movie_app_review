@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Movie from './Movie';
 
 
 class App extends React.Component {
@@ -11,8 +12,14 @@ class App extends React.Component {
   };
 
     getMovies = async () => {
-      const movies = await axios.get('https://yts-proxy.now.sh/list_movies.json');
-      console.log(movies);
+      const { data: {data: { movies },},} 
+      = await axios.get('https://yts-proxy.now.sh/list_movies.json?limit=30&&sort_by=download_count');
+      // 기존에 movies의 배열이 담길 변수 movies를 구조 분해 할당을 통해 만들었다.
+
+      
+      this.setState({ movies : movies, isLoading:false });
+      // state에 있는 movies : 구조 분해 할당으로 얻은 movies
+      // isLoading은 데이터를 다 가져오게 되면 false로 바꿔준다. 후에 화면에는 we are ready가 출력되게 된다.
     };
     
 
@@ -22,8 +29,21 @@ class App extends React.Component {
   }
 
   render(){
-    const { isLoading } = this.state;
-    return <div>{isLoading ? 'Loading ...' : ' We are ready '}</div>;
+    const { isLoading, movies } = this.state;
+    return <div>{isLoading ? 'Loading ...' : 
+    movies.map( (movie) => {
+      console.log(movie);
+      return <Movie   
+        // Movie 컴포넌트에서 받아오는 프롭스 = { 실제 들어가야할 json의 속성명 } 
+        key = {movie.id}
+        id={movie.id} 
+        year={movie.year}
+        title={movie.title}
+        summary={movie.summary}
+        poster={movie.medium_cover_image}
+      />;
+    }) }
+    </div>;
    }
 }
 
